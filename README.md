@@ -2,7 +2,7 @@
 Identifies vulnerabilities in network_security_config.xml, AndroidManifest.xml and if Firebase URL are accessible publicly.
 This tools also shows deeplinks avaialble in app.
 
-JDK and Python3 is required.
+JDK and Python3 are required.
 
 <b>*How to Install:* </b></br>
 <i>cd ScanAndroidXML </br>
