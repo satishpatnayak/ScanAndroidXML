@@ -18,6 +18,8 @@ Move apk file into SacnAndroidXML directory
 
 This will print the results in terminal and generate results in html file. 
 
+
+<b>*Sample Results:*</b></br>
 ![Results](info.jpg)
 
 
