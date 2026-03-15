@@ -14,7 +14,7 @@ def fireBaseTest(filename, stringsFile):
 	firebaseURL=""
 	#writeResults(filename,"</br>[Info] --- Checking for firebase URLs")
 	# for Strings.xml file 
-	stringsFile=pwd+"\\"+filename+stringsFile;
+	stringsFile=os.path.join(pwd, filename, stringsFile);
 	print("[Info] - Checking for Firebase URLs");
 	writePassResults(filename,"<br> <br><b>Firebase Checks</b> ")
 	try:
@@ -53,7 +53,7 @@ def fireBaseTest(filename, stringsFile):
 						
 def network_security_config_Test(filename,nscFile):
 	#writeResults(filename,"</br>[Info] --- Network security config check is in progress")
-	stringsFile=pwd+"\\"+filename+nscFile
+	stringsFile=os.path.join(pwd, filename, nscFile)
 	print("[Info] - Checking for Network Security Config")
 	writePassResults(filename,"<br> <br><b>Network Security Config Checks</b>")
 	try:
@@ -89,7 +89,7 @@ def getDeepLinks():
 	print("[Info] - Checking for Deeplinks");
 	writePassResults(filename,"</br></br> <b> Custom URL Check</b>")
 	# for AndroidManifest.xml file 
-	f1=pwd+"\\"+filename+"\\"+manifestFile
+	f1=os.path.join(pwd, filename, manifestFile)
 	writePassResults(filename,"</br>[Info]---AndroidManifest.xml file Location: "+ f1)
 	with open(f1, errors='ignore') as f:
 		f2=f.read()
@@ -140,7 +140,7 @@ def getDeepLinks():
 			writePassResults(filename,"</br>No more schemes")			
 			
 def isDebuggableOrBackup():
-	f1=pwd+"\\"+filename+"\\"+manifestFile
+	f1=os.path.join(pwd, filename, manifestFile)
 	with open(f1, errors='ignore') as f:
 		f2=f.read()
 		print("[Info] - Checking AndroidManifest.xml");
@@ -172,37 +172,31 @@ def writePassResults(filename,msg):
 	f.close()
 	
 apkfile = sys.argv[-1]
-# Get file extension .apk 
 filename, file_extension = os.path.splitext(apkfile)
 pwd=os.getcwd()
-stringsFile="\\res\\values\\strings.xml"
-nscFile="\\res\\xml\\network_security_config.xml"
+stringsFile=os.path.join("res","values","strings.xml")
+nscFile=os.path.join("res","xml","network_security_config.xml")
 manifestFile="AndroidManifest.xml"
 resultsHtml=filename+".html"
 resultsHtmlTemp=filename+"Temp.html"
 head="<!DOCTYPE html><html><head><style>table {  font-family: arial, sans-serif;  border-collapse: collapse;  width: 100%;}	td, th {	border: 1px solid #dddddd;	text-align: left;	padding: 8px;	}	tr:nth-child(even) {	background-color: #dddddd;	}	</style>	</head>	<body>"
 endhtml="</body> </html>"
-print("    ______                   _______           _            _     _ _     _ _______ _");       
-print("   / _____)                 (_______)         | |          (_)   | (_)   (_|_______|_)  ");    
-print("  ( (____   ____ _____ ____  _______ ____   __| | ____ ___  _  __| |  ___   _  _  _ _  ");     
-print("   \____ \ / ___|____ |  _ \|  ___  |  _ \ / _  |/ ___) _ \| |/ _  | |   | | ||_|| | | ");     
-print("   _____) | (___/ ___ | | | | |   | | | | ( (_| | |  | |_| | ( (_| |/ / \ \| |   | | |_____ ");
-print("  (______/ \____)_____|_| |_|_|   |_|_| |_|\____|_|   \___/|_|\____|_|   |_|_|   |_|_______)");
-print("\n Created by https://twitter.com/satish_patnayak\n");
-print("This tool analyzes Android app to find vulnerabilities in \n1. AndroidManifest.xml \n2. network_security_config.xml \n3. Firebase URLs from strings.xml. \nThis tool also shows Deeplinks used in Android app.\n");
+
 writeResults(filename, head +"<h3>This tool analyze Android app to find vulnerabilities in AndroidManifest.xml, network_security_config.xml and Firebase URLs from strings.xml </br>This tool also shows Deeplinks used in Android app </br>Developed by Satish Patnayak <a href='https://twitter.com/satish_patnayak'>satish_patnayak</a> </br> </br>Analysis results of <u>"+apkfile+"</u></h3>")
+
 if file_extension == ".apk":
-	#Decompile APK file 
 	print("[Info] - Please wait while I am analyzing Android app" + apkfile);
 	
 	if path.exists(resultsHtml):
 		os.remove(resultsHtml)
 		writeResults(filename, head +"<h3>This tool analyzes Android app to find vulnerabilities in AndroidManifest.xml, network_security_config.xml and Firebase URLs from strings.xml </br>This tool also shows Deeplinks used in Android app </br>Developed by Satish Patnayak <a href='https://twitter.com/satish_patnayak'>satish_patnayak</a> </br> </br>Analysis results of <u>"+apkfile+"</u></h3>")	
+
 	os.system('java -jar apktool.jar d -q "' + apkfile +'"')
 	isDebuggableOrBackup()
 	network_security_config_Test(filename, nscFile)
 	fireBaseTest(filename, stringsFile)
 	getDeepLinks()
+
 	try:
 		f11=open(resultsHtmlTemp, "r")
 		writeResults(filename, "</br><h3>Pass cases</h3>"+f11.read() + endhtml)
@@ -210,8 +204,9 @@ if file_extension == ".apk":
 		os.remove(resultsHtmlTemp)
 	except IOError:
 		writeResults(filename,endhtml)
-	print("Results are printed in "+pwd+"\\"+resultsHtml)
-# if file extension is not .apk
+
+	print("Results are printed in "+os.path.join(pwd,resultsHtml))
+
 else:
 	print("[Warning] - Please use apk file only");
 	writeResults(filename,"</br>Please use apk file only")
